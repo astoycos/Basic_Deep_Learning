@@ -1,7 +1,7 @@
+# Copyright astoycos@bu.edu
 import os
 import shutil
 import csv
-import random
 import pydicom
 import png
 import numpy as np
@@ -10,13 +10,15 @@ from skimage import io
 from skimage import measure
 from skimage.transform import resize
 import itertools
-import med2image
-
-import tensorflow as tf
-from tensorflow import keras
 
 from matplotlib import pyplot as plt
 import matplotlib.patches as patches
+
+#Sources 
+#https://stackoverflow.com/questions/22214949/generate-numbers-with-3-digits
+
+
+
 
 #Dict to hold train Label information 
 pneumonia_train = {}
