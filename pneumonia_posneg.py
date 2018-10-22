@@ -10,28 +10,31 @@ from skimage import io
 from skimage import measure
 from skimage.transform import resize
 import itertools
-
+from PIL import Image
+from resizeimage import resizeimage
 from matplotlib import pyplot as plt
 import matplotlib.patches as patches
 
 #Sources 
 #https://stackoverflow.com/questions/22214949/generate-numbers-with-3-digits
-
-
-
+#https://github.com/pydicom/pydicom/issues/352
+#https://gis.stackexchange.com/questions/107568/creating-multiple-folders-named-by-a-list-in-python
 
 #Dict to hold train Label information 
 pneumonia_train = {}
 pneumonia_valid = {}
 
+number_of_train_images = 10000
+number_of_valid_images = 3000
 
+# Make directories for Testing, Verification and Training Sets 
 train_data_directory_POS = 'Data/Train/pneumonia/'
 train_data_directory_NEG = 'Data/Train/no_pneumonia/'
 valid_data_directory_POS = 'Data/Valid/pneumonia/'
 valid_data_directory_NEG = 'Data/Valid/no_pneumonia/'
 test_data_directory = 'Data/Test/'
 
-
+#If directory aleardy existis delete it 
 if not os.path.exists(train_data_directory_POS):
 	os.makedirs(train_data_directory_POS)
 else: 
@@ -62,7 +65,7 @@ else:
 	shutil.rmtree(test_data_directory)
 	os.makedirs(test_data_directory)
 
-
+# Function to convert DICOM images to PNG images 
 def DICOM_to_png(path,destination):
 	ds = pydicom.dcmread(path)
 
@@ -82,6 +85,14 @@ def DICOM_to_png(path,destination):
 	    w = png.Writer(shape[1], shape[0], greyscale=True)
 	    w.write(png_file, image_2d_scaled)
 
+	#Resize PNG for use with model  
+	with open(destination, 'r+b') as f:
+	    with Image.open(f) as image:
+	        cover = resizeimage.resize_contain(image, [256, 256, 1])
+	        cover.save(destination, image.format)
+
+#Create dictionaries for traning and Validation sets 
+#split is dont 70% Training 30% Validation 
 with open(os.path.join('stage_1_train_labels.csv'), mode = 'r') as infile: 
 	reader = csv.reader(infile)
 	#we want to skip the header 
@@ -105,18 +116,15 @@ with open(os.path.join('stage_1_train_labels.csv'), mode = 'r') as infile:
 			continue
 		else:
 			pneumonia_valid[filename] = disease 
-
-
-#Convert DICOM to Numpy Array
-#create Train folder
+#counters used to show progress of preprocessing
 filescounted = 0 
 filescounted2 = 0 
 
 train_number = 0
 valid_number = 0 
 
-
-for filename in itertools.islice(pneumonia_train, 10000): 
+#populate traning data directory 
+for filename in itertools.islice(pneumonia_train,  number_of_train_images): 
 	print("Train_files counted ", filescounted ,end="\r",flush=True)
 	filescounted += 1 
 	if pneumonia_train[filename] == '1':
@@ -126,13 +134,14 @@ for filename in itertools.islice(pneumonia_train, 10000):
 		DICOM_to_png(("stage_1_train_images/" + filename + ".dcm"),(train_data_directory_NEG + ("%04d" % valid_number) + ".jpg" ))
 		valid_number += 1
 
-#create Validation folder 
+ 
 train_number = 0
 valid_number = 0 
 
 print('\n')
 
-for filename2 in itertools.islice(pneumonia_valid, 3000):
+#populate validation data directory
+for filename2 in itertools.islice(pneumonia_valid, number_of_valid_images):
 	print("Valid_files counted ",filescounted2,end="\r",flush=True)
 	filescounted2 += 1  
 	if pneumonia_valid[filename2] == '1':
@@ -143,7 +152,6 @@ for filename2 in itertools.islice(pneumonia_valid, 3000):
 		valid_number += 1
 
 #Populate Test data directory 
-
 directory = os.fsencode('stage_1_test_images')
 
 print('\n')
@@ -157,7 +165,6 @@ for idx, file in enumerate(os.listdir(directory)):
 	else:
 		continue
 	
-	# print(os.path.join(directory, filename))
 	
 
 
