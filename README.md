@@ -1,4 +1,4 @@
-# Mini_Project2: Basic Neural Network Design for Pneumonia diagnosis   
+# Mini_Project2: A Basic Neural Network Design for Pneumonia Diagnosis   
 
 
 This program was created to try and classify DICOM chest X-Rays as either Pneumonia positive or negative based on lung opacitites, 
