@@ -89,8 +89,7 @@ $ Python3 pneumonia_posneg_eval.py
 ```
 
 ## A Short Neural Net Architecture Comarison: LeNet5 and Resnet 
-LeNet was released in 1988 by Yann LeCun and is a pioneering architecture that paved the way for many of the modern deep learning architectutres used today. 
-It was revolutionary due to the fact that never before had there been a network that 
+LeNet was released in 1988 by Yann LeCun and is a pioneering architecture that paved the way for many of the modern deep learning architectutres used today. It was revolutionary due to the fact that never before had there been a network which used convolutions to extract various image features.  Also, it was built during an era where hardware was a major constrant so being able to tune the various convolutional layers made it efficient enough to run in the pre GPU era.  Specifically the platform was built using three major blocks. First the image is convoluted by various sized filters to extract features, as you go deeper in the network the feature maps change from simply reporesening lines and edges, to being able to recognize macro objects.  Pooling layers follow each convolution and serve to extract the most significant data within a feature map while also decreasing the size of the layer.  Lastly a non-linear activation function is applied, such as a tanh or sigmoid equation. Lastly is a set of dense fully connected layers to serve as a final classifier. Due to the simplistic and tunable nature of this architecture I decided to model the basic pneumonia network following many of the same guidelines.   
 
 
 ## Authors
@@ -99,6 +98,9 @@ It was revolutionary due to the fact that never before had there been a network 
 
 ## Acknowledgments
 
-* Specific sourses can be found in module source code 
+* Specific code sourses can be found in module source code 
 * Genereal code schematic provided by https://blog.keras.io/building-powerful-image-classification-models-using-very-little-data.html
+* Architecture Comparison sources 
+**https://towardsdatascience.com/neural-network-architectures-156e5bad51ba
+
 
