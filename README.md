@@ -86,7 +86,7 @@ $ Unzip stage_1_test_images.zip
 $ Unzip	stage_1_train_images.zip
 $ Unzip	stage_1_train_labels.csv.zip
 ```
-2. execute the modules in the following order 
+2. execute the modules in the following order, Make sure to use Python 3
 
 ```
 $ Python3 pneumonia_posneg.py
@@ -94,7 +94,7 @@ $ Python3 pneumonia_posneg_model.py
 $ Python3 pneumonia_posneg_eval.py
 ```
 ## Discussion and Some Results 
-For this mini project I was heavily constrained by HardWare, specifically all models were trained on a 2018 macbook pro intell i7 CPU.  In the future further experimentation and compution should be done via the cloud or more robust software. The maximum accuraacy I was wable to achieve was 77% after running for 5 epochs. which turned out to be the maximum feasibly possible on my personal computer with such a large data set.
+For this mini project I was heavily constrained by HardWare, specifically all models were trained on a 2018 macbook pro intell i7 CPU.  In the future further experimentation and compution should be done via the cloud or more robust hardware. The maximum accuracy I was wable to achieve was 77% after running for 5 epochs. which turned out to be the maximum feasibly possible on my personal computer when using such a large data set.
 
 Ultimatley it seems that diagnosing pneumonia from chest x-rays effetively will require a much larger nerual network architecture along with more imputs, such as bounding boxes, in order to truly be successful. Specifically when we attempt to predict on test images we most often get an output of [0] which leads me to believe that the problem is too complex for such a simple Neural Network. However as demonstration for simple nerual network architecture and data pre-prossing this demonstration was very effective.  
 
