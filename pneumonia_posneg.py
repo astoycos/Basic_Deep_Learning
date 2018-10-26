@@ -24,8 +24,8 @@ import matplotlib.patches as patches
 pneumonia_train = {}
 pneumonia_valid = {}
 
-number_of_train_images = 10000
-number_of_valid_images = 3000
+number_of_train_images = 5000
+number_of_valid_images = 1000
 
 # Make directories for Testing, Verification and Training Sets 
 train_data_directory_POS = 'Data/Train/pneumonia/'
@@ -128,10 +128,10 @@ for filename in itertools.islice(pneumonia_train,  number_of_train_images):
 	print("Train_files counted ", filescounted ,end="\r",flush=True)
 	filescounted += 1 
 	if pneumonia_train[filename] == '1':
-		DICOM_to_png(("stage_1_train_images/" + filename + ".dcm"),((train_data_directory_POS) + ("%04d" % train_number) + ".jpg"))
+		DICOM_to_png(("stage_1_train_images/" + filename + ".dcm"),((train_data_directory_POS) + ("pneumonia") + ("%04d" % train_number) + ".jpg"))
 		train_number += 1
 	else:
-		DICOM_to_png(("stage_1_train_images/" + filename + ".dcm"),(train_data_directory_NEG + ("%04d" % valid_number) + ".jpg" ))
+		DICOM_to_png(("stage_1_train_images/" + filename + ".dcm"),((train_data_directory_NEG) + ("no_pneumonia") + ("%04d" % valid_number) + ".jpg" ))
 		valid_number += 1
 
  
@@ -145,10 +145,10 @@ for filename2 in itertools.islice(pneumonia_valid, number_of_valid_images):
 	print("Valid_files counted ",filescounted2,end="\r",flush=True)
 	filescounted2 += 1  
 	if pneumonia_valid[filename2] == '1':
-		DICOM_to_png(("stage_1_train_images/" + filename2 + ".dcm"),(valid_data_directory_POS + ("%04d" % train_number) + ".jpg"))
+		DICOM_to_png(("stage_1_train_images/" + filename2 + ".dcm"),((valid_data_directory_POS) + ("pneumonia") + ("%04d" % train_number) + ".jpg"))
 		train_number += 1 
 	else:
-		DICOM_to_png(("stage_1_train_images/" + filename2 + ".dcm"),(valid_data_directory_NEG + ("%04d" % valid_number) + ".jpg"))
+		DICOM_to_png(("stage_1_train_images/" + filename2 + ".dcm"),((valid_data_directory_NEG) + ("no_pneumonia") + ("%04d" % valid_number) + ".jpg"))
 		valid_number += 1
 
 #Populate Test data directory 

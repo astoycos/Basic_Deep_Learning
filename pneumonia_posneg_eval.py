@@ -24,10 +24,11 @@ import pickle
 #https://stackoverflow.com/questions/41061457/keras-how-to-save-the-training-history
 
 #open model history 
-with open('pneumoia_model_history8.pkl', 'rb') as f:
+with open('pneumoia_model_history10.pkl', 'rb') as f:
 	history = pickle.load(f)
+print(history)
 
-epochs = list(range(1,len(history['acc']) + 1))
+epochs = list(range(1,len(history['binary_accuracy']) + 1))
 
 print(epochs)
 
@@ -38,29 +39,28 @@ plt.plot(epochs, history["val_loss"], label="Valid loss")
 plt.xlabel('Epochs')
 plt.legend()
 plt.subplot(122)
-plt.plot(epochs, history["acc"], label="Train accuracy")
-plt.plot(epochs, history["val_acc"], label="Valid accuracy")
+plt.plot(epochs, history["binary_accuracy"], label="Train accuracy")
+plt.plot(epochs, history["val_binary_accuracy"], label="Valid accuracy")
 plt.xlabel('Epochs')
 plt.legend()
 plt.show()
 
-
 # load json and create model
-json_file = open('pneumonia_model8.json', 'r')
+json_file = open('pneumonia_model10.json', 'r')
 loaded_model_json = json_file.read()
 json_file.close()
 model = model_from_json(loaded_model_json)
 # load weights into new model
-model.load_weights('pneumonia_model_weights8.h5')
+model.load_weights('pneumonia_model_weights10.h5')
 print("Loaded model from disk")
  
 # evaluate loaded model on test data
 sgd = optimizers.SGD(lr=.0001)
-model.compile(loss='binary_crossentropy', optimizer=sgd, metrics=['accuracy'])
+model.compile(loss='binary_crossentropy', optimizer=sgd, metrics=['binary_accuracy'])
 
 plt.figure(figsize=(54,10))
 
-
+#plot model predictions on test set 
 for x in range(9):
 	rand = random.randint(0,1001)
 	filename = ("%04d" % rand) + ".jpg"
@@ -68,11 +68,13 @@ for x in range(9):
 	img2 = image.img_to_array(img)
 	test_img = img2.reshape((1,256,256,3))
 	
+	print(model.predict(test_img))
 	img_class = model.predict_classes(test_img)
-	print(img_class)
+	img_prob = model.predict_proba(test_img)
+	
 	prediction = img_class[0]
 	classname = img_class[0]
-	print(prediction)
+	
 	print("Class: ",classname)
 
 	

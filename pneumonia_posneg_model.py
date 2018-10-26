@@ -27,45 +27,46 @@ img_width, img_height = 256, 256
 train_data_dir = 'data/train/'
 validation_data_dir = 'data/valid/'
 
-nb_train_samples = 10000
-nb_validation_samples = 3000
-epochs = 5
+nb_train_samples = 5000
+nb_validation_samples = 1000
+epochs = 2
 batch_size = 30
-learning_rate = .0001
+learning_rate = .001
 
 if K.image_data_format() == 'channels_first':
     input_shape = (3, img_width, img_height)
 else:
     input_shape = (img_width, img_height, 3)
 
+#Model architectre loosly based on ResNet5
 model = Sequential()
-model.add(Conv2D(16, (3, 3), input_shape=input_shape))
+model.add(Conv2D(32, (3, 3), input_shape=input_shape))
 model.add(LeakyReLU(alpha=0.3))
 model.add(MaxPooling2D(pool_size=(2, 2),strides=2))
 
-model.add(Conv2D(16, (5, 5)))
+model.add(Conv2D(32, (3, 3)))
 model.add(LeakyReLU(alpha=0.3))
 model.add(MaxPooling2D(pool_size=(2, 2),strides=2))
 
-model.add(Conv2D(8, (7, 7)))
+model.add(Conv2D(64, (5, 5)))
 model.add(LeakyReLU(alpha=0.3))
 model.add(MaxPooling2D(pool_size=(2, 2),strides=2))
 
 
 model.add(Flatten())
-model.add(Dense(32))
-model.add(Activation('relu'))
+model.add(Dense(64))
+model.add(LeakyReLU(alpha=0.3))
 model.add(Dropout(0.3))
 model.add(Dense(1))
-model.add(Activation('softmax'))
+model.add(Activation('sigmoid'))
 
-#Two Possible optimizers I found sgd to work better 
+#Two Possible optimizers I found sgd to work better for accuracy
 RMSprop = optimizers.RMSprop(lr=learning_rate)
 sgd = optimizers.SGD(lr=learning_rate)
 
 model.compile(loss='binary_crossentropy',
               optimizer=sgd,
-              metrics=['accuracy'])
+              metrics=['binary_accuracy'])
 
 #this is the augmentation configuration we will use for training
 #the generator creates and passes batchs of train images 
@@ -75,7 +76,7 @@ train_datagen = ImageDataGenerator(
     zoom_range=0.2,
     horizontal_flip=True)
 
-# this is the augmentation configuration we will use for testing:
+#this is the augmentation configuration we will use for testing:
 #the generator creates and passes batchs of validation images
 test_datagen = ImageDataGenerator(rescale=1. / 255)
 
@@ -102,13 +103,16 @@ history = model.fit_generator(
 
 #save model for use by next module 
 
+#save model architecture 
 model_json = model.to_json()
-with open("pneumonia_model9.json", "w") as json_file:
+with open("pneumonia_model.json", "w") as json_file:
     json_file.write(model_json)
+
 #save model weights 
-model.save_weights('pneumonia_model_weights9.h5')
+model.save_weights('pneumonia_model_weights.h5')
+
 #save model history 
-with open('pneumoia_model_history9.pkl', 'wb') as f:
+with open('pneumoia_model_history.pkl', 'wb') as f:
 	pickle.dump(history.history, f, pickle.HIGHEST_PROTOCOL)
 
 
